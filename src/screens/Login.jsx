@@ -14,21 +14,29 @@ const Login = () => {
 
     const navigate = useNavigate();
     const user = localStorage.getItem("uid");
-
     useEffect(() => {
         if (user) {
             navigate('/home')
         }
-    })
+    }, [])
+
 
     const login = (e) => {
         e.preventDefault()
 
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // console.log('sign in ', userCredential.user);
-                localStorage.setItem('uid', userCredential.user.uid)
-                navigate('/home')
+                if (userCredential.user.email === 'admin@gmail.com' && userCredential.user.uid === 'at64ZIYgqaawRyCAkH6xMYBRNwS2') {
+                    localStorage.setItem('uid', userCredential.user.uid)
+                    navigate('/admin')
+                    console.log(userCredential.user.email);
+                    console.log(userCredential.user.uid);
+                }
+                else {
+                    localStorage.setItem('uid', userCredential.user.uid)
+                    navigate('/home')
+                }
+
             })
             .catch((error) => {
                 const errorCode = error.code;

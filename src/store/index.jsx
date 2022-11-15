@@ -14,3 +14,5 @@ const store = createStore(persistedReducer, {}, applyMiddleware(thunk))
 const persistor = persistStore(store);
 export { store, persistor }
 
+
+

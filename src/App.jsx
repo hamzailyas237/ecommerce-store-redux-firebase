@@ -7,6 +7,7 @@ import SelectedItem from './screens/SelectedItem';
 import Signup from './screens/Signup';
 import Login from './screens/Login';
 import ProtectedRoutes from './protectedRoutes/ProtectedRoutes';
+import Admin from './screens/Admin';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path='/home/mycart' element={<CartItems />} />
           <Route path='/selectedItem/mycart' element={<CartItems />} />
           <Route path='/selectedItem' element={<SelectedItem />} />
+          <Route path='/admin' element={<Admin/>}/>
           <Route path='*' element={<h1 style={{textAlign:'center', marginTop:'20px'}}>Error 404 Page Not Found </h1>} />
         </Route>
       </Routes>

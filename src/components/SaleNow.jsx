@@ -6,6 +6,8 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { auth, db, storage } from '../firebase/Firebase';
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { ref, uploadBytes, listAll, getDownloadURL } from "firebase/storage";
+import { useDispatch } from 'react-redux';
+import { AddProductToAdminPanelAction } from '../store/actions/ProductActions';
 
 const SaleNow = () => {
 
@@ -22,17 +24,18 @@ const SaleNow = () => {
     const [imageUpload, setImageUpload] = useState('');
 
 
-    const handelImage = async() => {
+    const dispatch = useDispatch()
+
+
+    const handelImage = async () => {
         const imageRef = ref(storage, `images/product images/${imageUpload.name}`)
         return uploadBytes(imageRef, imageUpload).then((snapshot) => {
-            alert('Product Added Successfully')
+            alert('Product Added Successfully, Refresh The Page')
             return getDownloadURL(snapshot.ref).then(url => url)
         })
     }
     var handleForm = async (e) => {
         e.preventDefault()
-
-        // Uploading images to firebase storage
 
         let image = ''
         if (imageUpload) {
@@ -46,8 +49,13 @@ const SaleNow = () => {
             price,
             image,
         }
-        const docRef = await addDoc(collection(db, "Products"), obj);
-        // console.log(docRef.id);
+
+        if (category === '' || title === '' || description === '' || price === '' || image === '') {
+            alert('Fill out all the fields')
+        }
+
+        dispatch(AddProductToAdminPanelAction(obj))
+
     }
 
 
@@ -62,18 +70,19 @@ const SaleNow = () => {
                 <Modal.Body>
 
                     <Form onSubmit={handleForm}>
-                        <Form.Select required onChange={(e) => setCategory(e.target.value)}>
+                        <Form.Select onChange={(e) => setCategory(e.target.value)}>
                             <option>Select Category</option>
                             <option value="men's clothing">men's clothing</option>
                             <option value="jewelery">jewelery</option>
                             <option value="electronics">electronics</option>
                             <option value="women's clothing">women's clothing</option>
                         </Form.Select>
+                        <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
 
                         <br />
 
                         <FloatingLabel label="Title">
-                            <Form.Control type="text" placeholder="Title"
+                            <Form.Control required type="text" placeholder="Title"
                                 onChange={(e) => setTitle(e.target.value)} />
                         </FloatingLabel>
 
@@ -95,7 +104,7 @@ const SaleNow = () => {
 
                         <br />
 
-                        <Form.Group controlId="formFile" className="mb-3">
+                        <Form.Group id="formFile" className="mb-3">
                             <Form.Label>Product Image</Form.Label>
                             <Form.Control type="file"
                                 accept="image/png, image/jpeg"

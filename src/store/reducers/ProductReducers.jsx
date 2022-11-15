@@ -7,6 +7,7 @@ const INITIAL_STATE = {
     cartItems: [],
     selectedItems: [],
     productCounter: 1,
+    productsToApprove: []
 }
 
 const GetProductsReducer = (state = INITIAL_STATE, action) => {
@@ -76,7 +77,28 @@ const SelectedItemReducer = (state = INITIAL_STATE, action) => {
     }
 }
 
+const AddAndRemoveProductFromAdminPanelReducer = (state = INITIAL_STATE, action) => {
+    switch (action.type) {
+        case ActionTypes.ADD_PRODUCT_TO_ADMIN_PANEL:
+            return {
+                ...state,
+                productsToApprove: [...state.productsToApprove, action.payload],
+            }
+        case ActionTypes.PRODUCT_ACCEPTED:
+        case ActionTypes.REMOVE_PRODUCT_FROM_ADMIN_PANEL:
+            const itemToRemove = state.productsToApprove.filter((product) => product.image !== action.payload.image)
+            return {
+                ...state,
+                productsToApprove: [...itemToRemove]
+            }
+        default:
+            return state
+    }
+}
 
-
-
-export { GetProductsReducer, AddAndRemoveToCartReducer, SelectedItemReducer }
+export {
+    GetProductsReducer,
+    AddAndRemoveToCartReducer,
+    SelectedItemReducer,
+    AddAndRemoveProductFromAdminPanelReducer,
+}
